@@ -7,27 +7,29 @@ r = []
 def compare(a, n):
     for i, j in enumerate(a):
         if n < j:
-            if i != 0:
-                return i - 1
-            else:
-                return i
+            return i
+    return -1
 
-meow = numpy.arange(-0.2, 0.2, 0.001)
-for i in tqdm(meow):
-    if 0.01 > i:
-        r.append(sum(55.81160550 * 0.107**2 / (0.107**2 + i**2)**3 * numpy.arange(0, 0.2, 0.001)))
+def dokujinokeisannsiki(i, arr):
+    return sum(55.81160550 * 0.107**2 / (0.107**2 + (i + arr)**2) **3)
+
+meow = numpy.arange(0, 0.2, 0.001)
+for i in tqdm(numpy.arange(-0.2, 0.2, 0.001)):
+    if 0 > i:
+        r.append(dokujinokeisannsiki(i, meow))
     else:
         ind = compare(meow, i)
-        arr = [meow[:ind], meow[ind:]]
-        a = nyan = numpy.arange(-(len(arr[0])), 0, 0.001).tolist()
-        nyan2 = numpy.arange(0.01, len(arr[1]), 0.001).tolist()
-        a.extend(nyan2)
-        r.append(sum(55.81160550 * 0.107**2 / (0.107**2 + i**2)**3 * numpy.array(a)))
+        arr = [len(meow[:ind]), len(meow[ind:])]
+        nyan = -1*(dokujinokeisannsiki(0, numpy.arange(0, arr[0]*0.001, 0.001)))
+        nyan2 = (dokujinokeisannsiki(0, numpy.arange(0, arr[1]*0.001, 0.001)))
+        r.append(nyan + nyan2)
 
 plt.plot(numpy.arange(-0.2, 0.2, 0.001), r)
-
+plt.xlabel('position')
+plt.ylabel('force')
 plt.show()
 
-print(numpy.array(meow)[numpy.where(numpy.array(r) == numpy.max(numpy.array(r)))])
+print(numpy.arange(-0.2, 0.2, 0.001)[numpy.where(numpy.array(r) == numpy.max(numpy.array(r)))])
+print(numpy.max(numpy.array(r)))
 
 print(sum(r[:numpy.where(numpy.array(r) == numpy.max(numpy.array(r)))[0][0]]))
